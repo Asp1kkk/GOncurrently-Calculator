@@ -10,10 +10,10 @@ import (
 type Server struct {
 	Server *http.Server
 
-	AdditionDuration       time.Duration
-	SubstractionDuration   time.Duration
-	MultiplicationDuration time.Duration
-	DivisionDuration       time.Duration
+	additionDuration       time.Duration
+	substractionDuration   time.Duration
+	multiplicationDuration time.Duration
+	divisionDuration       time.Duration
 }
 
 func New(addition, substraction, multiplication, division time.Duration) *Server {
@@ -27,10 +27,10 @@ func New(addition, substraction, multiplication, division time.Duration) *Server
 			Addr:    ":8080",
 		},
 
-		AdditionDuration:       addition,
-		SubstractionDuration:   substraction,
-		MultiplicationDuration: multiplication,
-		DivisionDuration:       division,
+		additionDuration:       addition,
+		substractionDuration:   substraction,
+		multiplicationDuration: multiplication,
+		divisionDuration:       division,
 	}
 }
 
