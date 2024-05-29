@@ -1,3 +1,3 @@
-module github.com/Asp1kkk/GOncurrently-Calculator
+module GOncurrently-Calculator
 
 go 1.21.6
