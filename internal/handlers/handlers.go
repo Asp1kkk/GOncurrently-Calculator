@@ -39,7 +39,21 @@ func AddExpression(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(response))
 
 	exp.Id = id
+	exp.Result = "calculating..."
+	exp.Status = "new"
 	id++
 
-	storage.DB = append(storage.DB, exp)
+	storage.DB.Storage = append(storage.DB.Storage, exp)
+}
+
+func GetExpressioins(w http.ResponseWriter, r *http.Request) {
+	buf, err := json.Marshal(storage.DB)
+	if err != nil {
+		http.Error(w, "something went wrong... (stringifying storage)", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(buf)
 }
