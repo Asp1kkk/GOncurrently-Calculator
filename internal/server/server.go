@@ -23,6 +23,7 @@ func New(addition, substraction, multiplication, division time.Duration) *Server
 
 	mux.HandleFunc("/api/v1/calculate", handlers.AddExpression)
 	mux.HandleFunc("/api/v1/expressions", handlers.GetExpressioins)
+	mux.HandleFunc("/api/v1/expressions/", handlers.GetExpressioinById)
 
 	return &Server{
 		Server: &http.Server{
