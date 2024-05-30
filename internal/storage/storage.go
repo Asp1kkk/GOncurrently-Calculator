@@ -3,8 +3,10 @@ package storage
 import "unicode"
 
 type Expression struct {
-	Id         int
+	Id         int    `json:"id"`
 	Expression string `json:"expression"`
+	Status     string `json:"status"`
+	Result     string `json:"result"`
 }
 
 func (e *Expression) RemoveSpaces() *Expression {
@@ -42,6 +44,16 @@ func (e *Expression) IsInvalid() bool {
 	return len(stack) != 0
 }
 
+type Expressions struct {
+	Storage []*Expression `json:"expressions"`
+}
+
 var (
-	DB []*Expression
+	DB *Expressions
 )
+
+func init() {
+	DB = &Expressions{
+		Storage: make([]*Expression, 0),
+	}
+}
