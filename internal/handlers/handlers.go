@@ -43,9 +43,19 @@ func AddExpression(w http.ResponseWriter, r *http.Request) {
 	exp.Id = id
 	exp.Result = "calculating..."
 	exp.Status = "new"
+	exp.AddSpaces()
+	exp.ToRpn()
+	d, err := exp.Calculate()
+	if err != nil {
+		http.Error(w, "invalid expression", http.StatusUnprocessableEntity)
+		return
+	}
+	exp.Result = strconv.Itoa(d)
+	exp.Status = "done"
 	id++
 
 	storage.DB.Storage = append(storage.DB.Storage, exp)
+
 }
 
 func GetExpressioins(w http.ResponseWriter, r *http.Request) {
