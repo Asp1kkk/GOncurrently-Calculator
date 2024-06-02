@@ -2,6 +2,9 @@ package storage
 
 import (
 	"GOncurrently-Calculator/internal/structures/stack"
+	"fmt"
+	"math"
+	"strconv"
 	"strings"
 	"unicode"
 )
@@ -11,6 +14,7 @@ type Expression struct {
 	Expression string `json:"expression"`
 	Status     string `json:"status"`
 	Result     string `json:"result"`
+	rpn        string
 }
 
 func (e *Expression) RemoveSpaces() *Expression {
@@ -25,6 +29,10 @@ func (e *Expression) RemoveSpaces() *Expression {
 }
 
 func (e *Expression) IsInvalid() bool {
+	if e.Expression == "" {
+		return true
+	}
+
 	stack := []rune{}
 
 	for i := 0; i < len(e.Expression); i++ {
@@ -66,7 +74,7 @@ func (e *Expression) AddSpaces() {
 		}
 	}
 
-	e.Expression = res
+	e.Expression = strings.Trim(res, " ")
 }
 
 func isStringDigit(s string) bool {
@@ -135,7 +143,49 @@ func (e *Expression) ToRpn() string { // RPN - Reverse Polish Notation
 		val, is = stk.Pop()
 	}
 
+	e.rpn = strings.Trim(result, " ")
+
 	return result
+}
+
+func (e *Expression) Calculate() (int, error) {
+	stk := stack.New[int]()
+
+	for _, v := range strings.Split(e.rpn, " ") {
+		if isStringDigit(v) {
+			digit, err := strconv.Atoi(v)
+			if err != nil {
+				return 0, fmt.Errorf("invalid expression")
+			}
+
+			stk.Push(digit)
+		} else {
+			a, ok := stk.Pop()
+			if !ok {
+				fmt.Printf("here: %v\n", v)
+				return 0, fmt.Errorf("invalid expression")
+			}
+			b, ok := stk.Pop()
+			if !ok {
+				fmt.Printf("here: %v\n", v)
+				return 0, fmt.Errorf("invalid expression")
+			}
+
+			if v == "+" {
+				stk.Push(b + a)
+			} else if v == "-" {
+				stk.Push(b - a)
+			} else if v == "*" {
+				stk.Push(b * a)
+			} else if v == "^" {
+				stk.Push(int(math.Pow(float64(b), float64(a))))
+			} else if v == "/" {
+				stk.Push(b / a)
+			}
+		}
+	}
+
+	return stk.GetTop(), nil
 }
 
 type Expressions struct {
