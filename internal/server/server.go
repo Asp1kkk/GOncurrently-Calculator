@@ -4,21 +4,15 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"time"
 
 	"GOncurrently-Calculator/internal/handlers"
 )
 
 type Server struct {
 	Server *http.Server
-
-	additionDuration       time.Duration
-	substractionDuration   time.Duration
-	multiplicationDuration time.Duration
-	divisionDuration       time.Duration
 }
 
-func New(addition, substraction, multiplication, division time.Duration) *Server {
+func New() *Server {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/api/v1/calculate", handlers.AddExpression)
@@ -30,11 +24,6 @@ func New(addition, substraction, multiplication, division time.Duration) *Server
 			Handler: mux,
 			Addr:    ":80",
 		},
-
-		additionDuration:       addition,
-		substractionDuration:   substraction,
-		multiplicationDuration: multiplication,
-		divisionDuration:       division,
 	}
 }
 
