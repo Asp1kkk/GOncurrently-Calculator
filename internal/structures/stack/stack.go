@@ -1,37 +1,45 @@
 package stack
 
 type node[T any] struct {
-	Value    T
-	Previous *node[T]
+	value    T
+	previous *node[T]
 }
 
 type Stack[T any] struct {
-	Top *node[T]
+	top *node[T]
 }
 
 func New[T any]() *Stack[T] {
 	return &Stack[T]{
-		Top: nil,
+		top: nil,
 	}
 }
 
 func (s *Stack[T]) Push(value T) {
 	new := &node[T]{
-		Value:    value,
-		Previous: s.Top,
+		value:    value,
+		previous: s.top,
 	}
 
-	s.Top = new
+	s.top = new
 }
 
 func (s *Stack[T]) Pop() (T, bool) {
-	if s.Top == nil {
+	if s.top == nil {
 		var nul T
 		return nul, false
 	}
 
-	value := s.Top.Value
-	s.Top = s.Top.Previous
+	value := s.top.value
+	s.top = s.top.previous
 
 	return value, true
+}
+
+func (s *Stack[T]) GetTop() T {
+	return s.top.value
+}
+
+func (s *Stack[T]) IsEmpty() bool {
+	return s.top == nil
 }
